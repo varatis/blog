@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="../css/style.css">
+		<title>Blog</title>
+	</head>
+	<body>
+		<header class="blog-header">
+	        <h1><a href=""><i class="fa fa-microphone"></i> Encore un Blog ?! #nonMaisAllo</a></h1>
+	        <nav>
+	            <a href=""><i class="fa fa-microphone"></i> Administration</a>
+	        </nav>
+    	</header>
+		<main>
+		<?php 
+
+
+			$bdd = new PDO('mysql:host=localhost;dbname=blog;charset=utf8', 'root', 'troiswa' );
+
+			$sql = "SELECT * FROM `article` JOIN author ON author.id = article.author_id  JOIN category ON category.id = article.category_id"  ;
+
+			$statement = $bdd->prepare($sql);
+			$statement->execute();
+			$articles = $statement->fetchall(\PDO::FETCH_ASSOC);
+			// print_r($articles);
+		?>
+			<h2>Accueil</h2>
+			<?php foreach ($articles as $article): ?>
+			<h3><i class="far fa-hand-point-right"></i><a href=""><?= $article["title"]?></a></h3>
+			<ul>
+				<?php $article["contentCut"] = substr($article["content"],0, 30); ?>
+				<li><?= $article["contentCut"] ?> [...]</li>
+				<li><p>rédigé par <?= $article["firstname"] . " " . $article["lastname"] ?> le <?= $article["created_at"]?> </p></li>
+			</ul>
+			<?php endforeach; ?>
+		</main>
